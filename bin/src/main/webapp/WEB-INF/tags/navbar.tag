@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-  <%--<link href="${pageContext.request.contextPath}/resources/css/navbar.css" rel="stylesheet" >--%>
+  <link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet" >
 </head>
 
 <!--  set navbar item as active depending on current page -->
@@ -17,10 +17,10 @@
 <c:if test="${currentURL.equals('/List')}">
 	<c:set var="activeLink" value="$('#navList').addClass('active');"/>
 </c:if>
-<c:if test="${currentURL.equals('/userRegistration')}">
+<c:if test="${currentURL.equals('/registration')}">
 	<c:set var="activeLink" value="$('#navUserRegistration').addClass('active');"/>
 </c:if>
-<c:if test="${currentURL.equals('/SignIn')}">
+<c:if test="${currentURL.equals('/login')}">
 	<c:set var="activeLink" value="$('#navSignIn').addClass('active');"/>
 </c:if>
 
@@ -32,21 +32,27 @@ $(document).ready(function() {
 </script>
 
 <body>
-	<div class="topNav">
-		<c:if test="${not empty user.userName}">
-			<a>Welcome, ${user.userName}</a>
-		</c:if>
-      	<a href="<c:url value="/"/>">Home</a>
-      	<a href="<c:url value="/welcome"/>">List</a>
-      	<a href="<c:url value="/registration"/>" style="float:right;">Register</a>
-      	<c:choose>
-			<c:when test="${not empty user.userName}">
-				<a href="<c:url value="/login"/>" style="float:right;">Sign out</a>
-			</c:when>
-			<c:otherwise>
-				<a href="<c:url value="/login?logout"/>" style="float:right;">Sign In</a>
-			</c:otherwise>
-		</c:choose> 
-    </div>
+	<nav class="navbar navbar-default">
+  		<div class="container-fluid">
+    		<div class="navbar-header">
+    		    <c:if test="${not empty user.userName}">
+					<a class="navbar-branch href="#">Welcome, ${user.userName}</a>
+				</c:if>
+    		</div>
+    		<ul class="nav navbar-nav">
+      			<li id="navHome"><a href="/App">Home</a></li>
+      			<li  id="navList"><a href="/list">List</a></li>
+      			<li id="navUserRegistration"><a href="/App/registration">Register</a></li>
+    			<c:choose>
+					<c:when test="${not empty user.userName}">
+						<li id="navSignIn"><a href="/App/login" >Sign out</a></li>
+					</c:when>
+					<c:otherwise>
+						<li id="navSignIn"><a href="/App/login">Sign In</a></li>		
+					</c:otherwise>
+				</c:choose> 
+    		</ul>
+  		</div>
+	</nav>
   </body>
 </html>
