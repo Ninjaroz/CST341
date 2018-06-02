@@ -41,7 +41,7 @@ $(document).ready(function() {
     		</div>
     		<ul class="nav navbar-nav">
       			<li id="navHome"><a href="/App">Home</a></li>
-      			<li  id="navList"><a href="/">List</a></li>
+      			<li  id="navList"><a href="/list">List</a></li>
       			<li id="navUserRegistration"><a href="/App/registration">Register</a></li>
     			<c:choose>
 					<c:when test="${not empty user.userName}">
