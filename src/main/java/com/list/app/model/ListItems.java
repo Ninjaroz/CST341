@@ -4,7 +4,7 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "list_items")
+@Table(name = "list_items", schema = "listapp")
 public class ListItems {
 		@Id
 		@Column(name="list_id")

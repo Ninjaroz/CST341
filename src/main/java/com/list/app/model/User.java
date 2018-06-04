@@ -4,10 +4,10 @@ package com.list.app.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user", schema = "listapp")
 public class User {
 	@Id
-	@Column(name="user_id")
+	@Column(name="id")
 	@GeneratedValue(strategy=GenerationType.AUTO)
     private Long userId;
 	
