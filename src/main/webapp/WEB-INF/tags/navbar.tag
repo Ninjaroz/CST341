@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">  
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
   <link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet" >
@@ -14,7 +14,7 @@
 <c:if test="${currentURL.equals('/')}">
 	<c:set var="activeLink" value="$('#navHome').addClass('active');"/>
 </c:if>
-<c:if test="${currentURL.equals('/List')}">
+<c:if test="${currentURL.equals('/list')}">
 	<c:set var="activeLink" value="$('#navList').addClass('active');"/>
 </c:if>
 <c:if test="${currentURL.equals('/registration')}">
@@ -41,14 +41,14 @@ $(document).ready(function() {
     		</div>
     		<ul class="nav navbar-nav">
       			<li id="navHome"><a href="/App">Home</a></li>
-      			<li  id="navList"><a href="/list">List</a></li>
+      			<li  id="navList"><a href="/App/list">List</a></li>
       			<li id="navUserRegistration"><a href="/App/registration">Register</a></li>
     			<c:choose>
 					<c:when test="${not empty user.userName}">
-						<li id="navSignIn"><a href="/App/login" >Sign out</a></li>
+						<li id="navSignIn"><a href="/App/login" >Log out</a></li>
 					</c:when>
 					<c:otherwise>
-						<li id="navSignIn"><a href="/App/login">Sign In</a></li>		
+						<li id="navSignIn"><a href="/App/login">Log In</a></li>		
 					</c:otherwise>
 				</c:choose> 
     		</ul>
