@@ -26,16 +26,18 @@ public class ListController {
     
     @RequestMapping(value = "/addList", method = RequestMethod.POST,  headers = "Accept=application/json")
     public void addList(@RequestBody ListItems listItems) {   	
-    	//List<ListItems> listExists = listService.findListByUserIdAndDate(listItems);
-    	//if (listExists.isEmpty()) {
+    	List<ListItems> listExists = listService.findListByUserIdAndDate(listItems);
+    	if (listExists.isEmpty()) {
+    		System.out.println("record does not already exist for today....");
     		listService.save(listItems);
-    	//}else {
-    		//update existing list
-    	//}
+    	}else {
+    		System.out.println("record exists for today....");
+    		listService.update(listItems);
+    	}
     }
     
     @RequestMapping(value = "/removeList", method = RequestMethod.POST)
     public void removeList(@RequestBody ListItems list) { 
-    	//TODO: removes all list items for userID on date passed
+    	listService.remove(list);
     }
 }
