@@ -17,9 +17,9 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script>
         $(document).ready(function() {
-            var csrf_token = "{{ csrf_token() }}";
             var listItems = new Array();
-            var date = new Date();
+            var date = new Date("2017-06-05");
+            var rowNum = 0;
 
             $.ajaxSetup({
                 beforeSend: function(xhr, settings) {
@@ -33,51 +33,54 @@
             });
 
             //TODO: populate list with items on ToDoList for logged in user
+            //update row number
+            //add items to list
 
             $("#addButton").click(function(){
-                var newRow = "<tr><td>"+$("#name").val()+"</td>"+
+                var newRow = "<tr id="+rowNum+"><td>"+$("#name").val()+"</td>"+
                     "<td>"+$("#contact").val()+"</td>"+
                     "<td>"+$("#finishTime").val()+"</td>"+
                     "<td><img src='${contextPath}/resources/images/removeButton.png' alt='remove Button' id='removeButton' /></td>";
                 $("#listItems tbody").append(newRow);
                 var listItem={name:$("#name").val(),contact:$("#contact").val(),time:$("#finishTime").val()};
                 listItems.push(listItem);
-                addItems(listItems, 1, date);
+                listItemsPost(listItems, "addList", 1, date);
                 clearNewItem();
+                rowNum += 1;
             });
 
             $("#startOver").click(function(){
-                $("#listItems tbody").remove();
-
-                //TODO: ajax query to remove list
+                $("#listItems tbody").html('');
+                listItemsPost(listItems, "removeList", 1, date);
+                listItems = new Array();
             });
 
             $('tbody').on('click', '#removeButton', function(){
-                //TODO: need to get currentrow remove from listItems then call addItems again
-                //to update the list
+            	var indexToDelete =+ parseInt($(this).closest('tr').attr("id"));
+            	delete listItems[indexToDelete];
+            	listItems = listItems.filter(function(n){return n != undefined});
                 $(this).closest('tr').remove();
+                listItemsPost(listItems, "addList", 1, date);
             });
 
         });
 
-        function addItems(listItems, userId, date){
+        function listItemsPost(listItems, uri, userId, date){
             var data={};
             data["listItems"]= JSON.stringify(listItems);
             data["userId"] = userId;
             data["date"] = new Date(date);
-            alert(JSON.stringify(data));
             $.ajax({
                 type: "POST",
-                url: "addList",
+                url: uri,
                 contentType:'application/json',
                 dataType: 'json',
                 data: JSON.stringify(data),
                 error: function(e){
-                    alert(e);
                 }
             });
         }
-
+        
         function removeItems(listItems){
 
         }
