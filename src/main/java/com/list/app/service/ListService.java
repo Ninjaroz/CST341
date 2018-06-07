@@ -8,4 +8,5 @@ public interface ListService {
 	  void save(ListItems list);
 	  List<ListItems> findListByUserIdAndDate(ListItems listItems);
 	  void remove(ListItems list);
+	  void update(ListItems list);
 }
