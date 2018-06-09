@@ -7,18 +7,27 @@
 
 <html>
 <head>
+	<style>
+		#errorMessage{
+			visibility: hidden;
+		}
+		.error{
+			border: 2px solid red;
+		}
+	</style>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<meta name = "_csrf" content ="${_csrf.token}" />
 	<meta name="_csrf_header" content="${_csrf.headerName}"/>
 	<title>List</title>
 	<link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
 	<link href="${contextPath}/resources/css/main.css" rel="stylesheet">
-
+	
+	<script src="${contextPath}/resources/js/listValidator.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script>
         $(document).ready(function() {
             var listItems = new Array();
-            var date = new Date("2017-06-05");
+            var date = new Date();
             var rowNum = 0;
 
             $.ajaxSetup({
@@ -37,16 +46,24 @@
             //add items to list
 
             $("#addButton").click(function(){
-                var newRow = "<tr id="+rowNum+"><td>"+$("#name").val()+"</td>"+
-                    "<td>"+$("#contact").val()+"</td>"+
-                    "<td>"+$("#finishTime").val()+"</td>"+
-                    "<td><img src='${contextPath}/resources/images/removeButton.png' alt='remove Button' id='removeButton' /></td>";
-                $("#listItems tbody").append(newRow);
-                var listItem={name:$("#name").val(),contact:$("#contact").val(),time:$("#finishTime").val()};
-                listItems.push(listItem);
-                listItemsPost(listItems, "addList", 1, date);
-                clearNewItem();
-                rowNum += 1;
+            	if (validateFields($("#name"),$("#contact"),$("#finishTime"))){
+            		//clear show error
+            		document.getElementById("errorMessage").style.visibility = "hidden";
+            		document.getElementById("errorMessage").innerHTML = "please correct the errors in red.";
+            		var newRow = "<tr id="+rowNum+"><td>"+$("#name").val()+"</td>"+
+                    	"<td>"+$("#contact").val()+"</td>"+
+                    	"<td>"+$("#finishTime").val()+"</td>"+
+                    	"<td><img src='${contextPath}/resources/images/removeButton.png' alt='remove Button' id='removeButton' /></td>";
+                	$("#listItems tbody").append(newRow);
+                	var listItem={name:$("#name").val(),contact:$("#contact").val(),time:$("#finishTime").val()};
+                	listItems.push(listItem);
+                	listItemsPost(listItems, "addList", 1, date);
+                	clearNewItem();
+                	rowNum += 1;
+            	}else{
+            		//display error	
+            		document.getElementById("errorMessage").style.visibility = "visible";
+            	}
             });
 
             $("#startOver").click(function(){
@@ -81,10 +98,6 @@
             });
         }
         
-        function removeItems(listItems){
-
-        }
-
         function clearNewItem(){
             $("#name").val("");
             $("#contact").val("");
@@ -94,7 +107,7 @@
 </head>
 <mytags:navbar/>
 <body>
-	<div class="container">
+	<div class="col-md-10">
 
 		<div class="row">
 			<div class="col-lg-12">
@@ -106,7 +119,7 @@
 
 		<div class="row">
 			<div class="col-lg-12">
-				<table id="listItems">
+				<table id="listItems" class="table-striped">
 					<thead>
 					<tr>
 						<th>Task</th>
@@ -115,13 +128,15 @@
 						<th>Actions</th>
 					</tr>
 					<tr>
-						<td><input type="text" id="name"></td>
-						<td><input type="text" id="contact"></td>
+						<th id="errorMessage" class="alert alert-danger" colspan="5">please correct the errors in red.</th>
+					</tr>
+					<tr>
+						<td><input type="text" id="name" maxlength="50"></td>
+						<td><input type="text" id="contact" maxlength="25"></td>
 						<td><input type="time" id="finishTime"></td>
 						<td><img src="${contextPath}/resources/images/addButton.png" alt="Add Button" id="addButton" /></td>
 					</tr>
 					</thead>
-
 					<tbody>
 					</tbody>
 				</table>
@@ -129,6 +144,10 @@
 			</div>
 		</div>
 
+	</div>
+	<div class="col-md-1">
+		<!--  TODO: Calendar -->
+		<p>Calendar</p>
 	</div>
 </body>
 </html>
