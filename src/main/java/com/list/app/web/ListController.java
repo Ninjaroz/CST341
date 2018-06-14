@@ -9,7 +9,12 @@ import com.list.app.service.ListService;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -19,8 +24,12 @@ public class ListController {
     private ListService listService;
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String displayList(Model model) {   	
-    	model.addAttribute("today", new Date());	
+    public String displayList(Model model, HttpServletRequest request) {   	
+    	model.addAttribute("today", new Date());
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+        	model.addAttribute("userName", authentication.getName().toString());
+        }
         return "list";
     }
     
