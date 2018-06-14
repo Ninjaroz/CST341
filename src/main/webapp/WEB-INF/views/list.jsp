@@ -111,7 +111,7 @@
 
 		<div class="row">
 			<div class="col-lg-12">
-				<h1>Welcome ${name} !</h1>
+				<h1>Welcome ${userName}!</h1>
 				<br>
 				<p>Today is ${today} <br> What's on your to-do list?</p>
 			</div>
