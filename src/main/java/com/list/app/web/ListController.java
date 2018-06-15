@@ -39,7 +39,7 @@ public class ListController {
     	if (listExists.isEmpty()) {
     		System.out.println("record does not already exist for today....");
     		listService.save(listItems);
-    	}else {
+    	} else {
     		System.out.println("record exists for today....");
     		listService.update(listItems);
     	}

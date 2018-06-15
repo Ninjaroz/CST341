@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `accounts`;
-USE `accounts`;
+CREATE DATABASE  IF NOT EXISTS `listapp`;
+USE `listapp`;
 
 --
 -- Table structure for table `role`

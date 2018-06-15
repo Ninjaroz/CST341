@@ -65,3 +65,7 @@ body {
     background-color: #ddd;
     color: black;
 }
+
+@media screen and (min-width: 800px) {
+    .list-and-calendar {display: flex; align-items: center;}
+}
