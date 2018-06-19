@@ -88,11 +88,15 @@
 	<script src="${contextPath}/resources/fullcalendar/lib/moment.min.js" type="application/javascript"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js" type="application/javascript"></script>
 	<script type="text/javascript">
+    	var listItems = new Array();
+   	 	var date = new Date();
+        var rowNum = 0;
         $(document).ready(function() {
-            var listItems = new Array();
-            var date = new Date();
-            var rowNum = 0;
-
+			var cList = '${listItems}';
+			//populates list based on logged in user and current date
+			alert(cList.listItems);
+			//populateList('${listItems}');
+            
             $.ajaxSetup({
                 beforeSend: function(xhr, settings) {
                     var header = $("meta[name='_csrf_header']").attr("content");
@@ -103,26 +107,15 @@
                     }
                 }
             });
-
-            //TODO: populate list with items on ToDoList for logged in user
-            //update row number
-            //add items to list
-
+            
             $("#addButton").click(function(){
                 if (validateFields($("#name"),$("#contact"),$("#finishTime"))){
                     //clear show error
                     document.getElementById("errorMessage").style.visibility = "hidden";
                     document.getElementById("errorMessage").innerHTML = "please correct the errors in red.";
-                    var newRow = "<tr id="+rowNum+"><td>"+$("#name").val()+"</td>"+
-                        "<td>"+$("#contact").val()+"</td>"+
-                        "<td>"+$("#finishTime").val()+"</td>"+
-                        "<td><img src='${contextPath}/resources/images/removeButton.png' alt='remove Button' id='removeButton' /></td>";
-                    $("#listItems tbody").append(newRow);
-                    var listItem={name:$("#name").val(),contact:$("#contact").val(),time:$("#finishTime").val()};
-                    listItems.push(listItem);
-                    listItemsPost(listItems, "addList", 1, date);
-                    clearNewItem();
-                    rowNum += 1;
+                    var listItem={"name":$("#name").val(),"contact":$("#contact").val(),"time":$("#finishTime").val()};
+                    populateList(listItem);
+                    listItemsPost(listItems, "addList", date);
                 }else{
                     //display error
                     document.getElementById("errorMessage").style.visibility = "visible";
@@ -168,10 +161,9 @@
 
         });
 
-        function listItemsPost(listItems, uri, userId, date){
+        function listItemsPost(listItems, uri, date){
             var data={};
             data["listItems"]= JSON.stringify(listItems);
-            data["userId"] = userId;
             data["date"] = new Date(date);
             $.ajax({
                 type: "POST",
@@ -188,6 +180,17 @@
             $("#name").val("");
             $("#contact").val("");
             $("#finishTime").val("");
+        }
+        
+        function populateList(listItem){
+        var newRow = "<tr id="+listItem.name+"><td>"+$("#name").val()+"</td>"+
+        			 "<td>"+listItem.contact+"</td>"+
+        			 "<td>"+listItem.time+"</td>"+
+        			 "<td><img src='${contextPath}/resources/images/removeButton.png' alt='remove Button' id='removeButton' /></td>";
+    	$("#listItems tbody").append(newRow);
+        clearNewItem();
+    	listItems.push(listItem);
+        rowNum += 1;
         }
 
 	</script>
