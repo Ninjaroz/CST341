@@ -1,3 +1,12 @@
+/**
+ * 
+ * This model represents a single listItem
+ * 
+ *  @author Gary
+ *  @version 1.0
+ *  @since 2018-06-18
+ */
+
 package com.list.app.model;
 
 import java.util.Date;
@@ -44,7 +53,9 @@ public class ListItem {
 	public void setTime(Date time) {
 		this.time = time;
 	}
-	
+	/**
+	 * @return String containing contents of object
+	 */
 	public String toString() {
 		return "name: " + this.name + ", contact: " + this.contact + ", time: " + this.time.toString();
 	}

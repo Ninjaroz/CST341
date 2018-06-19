@@ -1,3 +1,12 @@
+/**
+ * 
+ * This model represents an array of listItems
+ * 
+ *  @author Gary
+ *  @version 1.0
+ *  @since 2018-06-18
+ */
+
 package com.list.app.model;
 
 import java.util.Date;
@@ -63,6 +72,7 @@ public class ListItems {
 		}
 
 		/**
+		 * 
 		 * @return the userId
 		 */
 		public Integer getUserId() {
@@ -75,7 +85,11 @@ public class ListItems {
 		public void setUserId(Integer userId) {
 			this.userId = userId;
 		}
-		
+		/**
+		 * Returns a string showing contents of object
+		 * @param args Unused.
+		 * @return String
+		 */
 		public String toString() {
 			return "listId: " + this.id + ", listItems: " + this.listItems + ", date: " + this.date.toString() + ", userId: " + this.userId;
 		}
