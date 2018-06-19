@@ -22,7 +22,7 @@
 	<meta name="_csrf_header" content="${_csrf.headerName}"/>
 	<title>List</title>
 	<link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
-	<link href="${contextPath}/resources/fullcalendar/fullcalendar.print.css" rel="stylesheet" />
+	<%--<link href="${contextPath}/resources/fullcalendar/fullcalendar.print.css" rel="stylesheet" />--%>
 	<link href="${contextPath}/resources/fullcalendar/fullcalendar.css" rel="stylesheet" />
 	<link href="${contextPath}/resources/css/main.css" rel="stylesheet">
 
@@ -33,18 +33,14 @@
 <div class="container">
 
 	<div class="row">
-	<div class="col-md-10">
-
-		<div class="row">
-			<div class="col-lg-12">
-				<h1>Welcome ${userName}!</h1>
-				<br>
-				<p id="todaysDate">Today is <strong>${today}</strong><br> What's on your to-do list?</p>
-			</div>
-		</div>
+	<div class="col-md-10 col-md-offset-1">
 
 		<div class="row list-and-calendar">
 			<div class="col-lg-8">
+				<h1>Hey there ${userName}!</h1>
+				<br>
+				<p id="todaysDate">Here's your list for today, <strong>${today}</strong><br> What's on your to-do list?</p>
+
 				<table id="listItems" class="table-striped">
 					<thead>
 					<tr>
@@ -54,7 +50,7 @@
 						<th>Actions</th>
 					</tr>
 					<tr>
-						<th id="errorMessage" class="alert alert-danger" colspan="5">please correct the errors in red.</th>
+						<th id="errorMessage" class="alert alert-danger" colspan="5">Please correct the errors in red:</th>
 					</tr>
 					<tr>
 						<td><input type="text" id="name" maxlength="50"></td>
@@ -72,7 +68,11 @@
 			<div class="col-md-4">
 				<!--  TODO: Calendar -->
 				<div id="calendar"></div>
-
+				<p>
+					<button class="btn btn-default" id='prev'>Previous Month</button>
+					<button class="btn btn-default" id='next'>Next Month</button>
+					<button class="btn btn-success" id='my-today-button'>Today</button>
+				</p>
 			</div>
 
 		</div>
@@ -94,7 +94,7 @@
         $(document).ready(function() {
 			var cList = '${listItems}';
 			//populates list based on logged in user and current date
-			alert(cList.listItems);
+			// alert(cList.listItems); Commented out alert since no items were entered yet
 			//populateList('${listItems}');
             
             $.ajaxSetup({
@@ -108,11 +108,11 @@
                 }
             });
             
-            $("#addButton").click(function(){
+            $("#addButton").click(function() {
                 if (validateFields($("#name"),$("#contact"),$("#finishTime"))){
                     //clear show error
                     document.getElementById("errorMessage").style.visibility = "hidden";
-                    document.getElementById("errorMessage").innerHTML = "please correct the errors in red.";
+                    document.getElementById("errorMessage").innerHTML = "Please correct the errors in red.";
                     var listItem={"name":$("#name").val(),"contact":$("#contact").val(),"time":$("#finishTime").val()};
                     populateList(listItem);
                     listItemsPost(listItems, "addList", date);
@@ -141,21 +141,38 @@
                 // page is now ready, initialize the calendar...
                 jQuery('div#calendar').fullCalendar({
                     // put your options and callbacks here
-                    navLinks: true,
-                    navLinkDayClick: function(date, jsEvent) {
+					header: {
+					    left: 'title',
+					    center: '',
+						right: ''
+					},
+					aspectRatio: 0.9,
+                    navLinks: false,
+                    dayClick: function(date, jsEvent) {
                         console.log('day', date.format()); // date is a moment
                         console.log('coords', jsEvent.pageX, jsEvent.pageY);
                         startNewDayList(date.format());
-                        $(this).css('background-color', '#d9d9d9');
                     }
-                })
+                });
+                //function for previous month selection
+                $('#prev').on('click', function() {
+                    $('#calendar').fullCalendar('prev'); // call method
+                });
+                //function for next month selection
+                $('#next').on('click', function() {
+                    $('#calendar').fullCalendar('next'); // call method
+                });
+                //function to return to today
+                $('#my-today-button').click(function() {
+                    $('#calendar').fullCalendar('today');
+                });
             });
 
             //function to select new day on calendar click
             function startNewDayList(newDate) {
                 listItemsPost(listItems, "addList", 1, date); //Save/update existing day's items
                 $("#listItems tbody").html(''); // clear list
-                $("#todaysDate").html('<p id="todaysDate">Today is <strong>' + newDate +'</strong><br> What\'s on your to-do list?</p>'); // clear list
+                $("#todaysDate").html('<p id="todaysDate">Here is the list for <strong>' + newDate +'</strong><br> What\'s on your to-do list?</p>'); // clear list
                 listItems = new Array();
             }
 
