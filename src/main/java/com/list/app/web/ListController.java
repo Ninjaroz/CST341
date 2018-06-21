@@ -14,11 +14,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import com.list.app.model.ListItems;
 import com.list.app.service.ListService;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,7 +44,7 @@ public class ListController {
      * @return Returns list page
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String displayList(Model model, HttpServletRequest request) {   	
+    public String displayList(Model model) {   	
     	model.addAttribute("today", new Date());
     	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -52,9 +55,38 @@ public class ListController {
         	User user = userService.findByUsername(authentication.getName().toString());
         	nList.setUserId(user.getUserId().intValue());
         	List<ListItems> nListItems = listService.findListByUserIdAndDate(nList);
-        	model.addAttribute("listItems", nListItems);
+        	if (!nListItems.isEmpty())
+        		model.addAttribute("listItems", nListItems.get(0).getListItems());
         }
         return "list";
+    }
+    /**
+     * This method gets the date from the list page and the username from the session
+     * returns the list if one exists for the date and user provided
+     * @param Date
+     * @return listItem
+     */
+    @RequestMapping(value="/getList", method = (RequestMethod.POST))
+    public @ResponseBody String getList(@RequestParam(value="date", required = true) Date date) {
+   	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+     if (!(authentication instanceof AnonymousAuthenticationToken)) {
+
+     	ListItems nList = new ListItems();
+     	//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+     	//try {
+			//nList.setDate(sdf.parse(date));
+     		nList.setDate(date);
+		//} catch (ParseException e) {
+		//	e.printStackTrace();
+		//}
+     	User user = userService.findByUsername(authentication.getName().toString());
+     	nList.setUserId(user.getUserId().intValue());
+     	List<ListItems> nListItems = listService.findListByUserIdAndDate(nList);
+		if (nListItems != null && !nListItems.isEmpty()) {
+     		return "{"+nListItems.get(0).getListItems()+"}";
+		}  		
+     }
+    	return "";
     }
     
     /**
@@ -72,7 +104,7 @@ public class ListController {
     	List<ListItems> listExists = listService.findListByUserIdAndDate(listItems);
     	if (listExists.isEmpty()) {
     		System.out.println("record does not already exist for today....");
-    		listService.save(listItems);
+			listService.save(listItems);
     	} else {
     		System.out.println("record exists for today....");
     		listService.update(listItems);
