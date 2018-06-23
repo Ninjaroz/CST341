@@ -1,0 +1,5 @@
+com.list.app.model
+com.list.app.repository
+com.list.app.service
+com.list.app.validator
+com.list.app.web
